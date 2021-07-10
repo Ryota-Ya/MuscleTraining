@@ -3,7 +3,7 @@
 
     <string name="push_ups_button">腹筋</string>
 
-    <string name="info_format">ax: %5.3f, ay: %5.3f, az: %5.3f</string>
+    <string name="info_format">az: %5.3f, isGoingDown: %b, isGoingUp: %b, isDown: %b, count: %d</string>
 
     <string name="toast_no_sensor_manager">No sensor manager available</string>
     <string name="toast_no_acceleration_sensor">No gyroscope available</string>

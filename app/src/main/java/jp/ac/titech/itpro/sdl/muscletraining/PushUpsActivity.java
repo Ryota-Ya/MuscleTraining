@@ -18,6 +18,8 @@ import java.util.TimerTask;
 public class PushUpsActivity extends AppCompatActivity  implements SensorEventListener, Runnable {
     private final static String TAG = PushUpsActivity.class.getSimpleName();
     private final static long GRAPH_REFRESH_PERIOD_MS = 20;
+    private final static long TIME_THRESHOLD = 200;
+    private final static float ACCELERATION_THRESHOLD = 0.5f;
 
     private TextView infoView;
 
@@ -27,7 +29,14 @@ public class PushUpsActivity extends AppCompatActivity  implements SensorEventLi
     private final Handler handler = new Handler();
     private final Timer timer = new Timer();
 
+    private final static float alpha = 0.75f;
     private float ax, ay, az;
+    private long msStartUp;
+    private long msStartDown;
+    private int count = 0;
+    private boolean isGoingUp = false; //上がっている状態
+    private boolean isGoingDown = false; //下がっている状態
+    private boolean isDown; //下がりきった状態
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +73,7 @@ public class PushUpsActivity extends AppCompatActivity  implements SensorEventLi
 
     @Override
     public void run() {
-        infoView.setText(getString(R.string.info_format, ax, ay, az));
+        infoView.setText(getString(R.string.info_format, az, isGoingDown, isGoingUp, isDown, count));
     }
 
     @Override
@@ -76,10 +85,40 @@ public class PushUpsActivity extends AppCompatActivity  implements SensorEventLi
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        ax = event.values[0];
-        ay = event.values[1];
-        az = event.values[2];
+        ax = alpha * ax + (1 - alpha) * event.values[0];
+        ay = alpha * ay + (1 - alpha) * event.values[1];
+        az = alpha * az + (1 - alpha) * event.values[2];
         Log.i(TAG, "x=" + ax + ", y=" + ay + ", z=" + az);
+
+//        isUp = false;
+//        isDown = false;
+
+        long msNow = System.currentTimeMillis();
+
+        if(az < -ACCELERATION_THRESHOLD){
+            if(!isGoingDown) {
+                msStartDown = System.currentTimeMillis();
+                isGoingDown = true;
+                isGoingUp = false;
+            }
+            if(msNow - msStartDown > TIME_THRESHOLD) {
+                isDown = true;
+            }
+        }
+
+        if(az > ACCELERATION_THRESHOLD){
+            if(!isGoingUp) {
+                msStartUp = System.currentTimeMillis();
+                isGoingDown = false;
+                isGoingUp = true;
+            }
+            if(isDown && msNow - msStartUp > TIME_THRESHOLD) {
+                count++;
+                isDown = false;
+            }
+        }
+
+
     }
 
     @Override
