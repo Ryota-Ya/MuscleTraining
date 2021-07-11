@@ -21,16 +21,20 @@ public class PushUpsActivity extends AppCompatActivity  implements SensorEventLi
     private final static long TIME_THRESHOLD = 200;
     private final static float ACCELERATION_THRESHOLD = 0.5f;
 
+    private TextView accelerationView;
     private TextView infoView;
+    private TextView gravityView;
 
     private SensorManager manager;
     private Sensor acceleration_sensor;
+    private Sensor gravity_sensor;
 
     private final Handler handler = new Handler();
     private final Timer timer = new Timer();
 
     private final static float alpha = 0.75f;
     private float ax, ay, az;
+    private float gx, gy, gz;
     private long msStartUp;
     private long msStartDown;
     private int count = 0;
@@ -44,7 +48,9 @@ public class PushUpsActivity extends AppCompatActivity  implements SensorEventLi
         setContentView(R.layout.activity_push_ups);
         Log.d(TAG, "onCreate");
 
+        accelerationView = findViewById(R.id.acceleration_view);
         infoView = findViewById(R.id.info_view);
+        gravityView = findViewById(R.id.gravity_view);
 
         manager = (SensorManager) getSystemService(SENSOR_SERVICE);
         if (manager == null) {
@@ -56,6 +62,10 @@ public class PushUpsActivity extends AppCompatActivity  implements SensorEventLi
         if (acceleration_sensor == null) {
             Toast.makeText(this, R.string.toast_no_acceleration_sensor, Toast.LENGTH_LONG).show();
         }
+        gravity_sensor = manager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+        if (gravity_sensor == null) {
+            Toast.makeText(this, R.string.toast_no_gravity_sensor, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -63,6 +73,7 @@ public class PushUpsActivity extends AppCompatActivity  implements SensorEventLi
         super.onResume();
         Log.d(TAG, "onResume");
         manager.registerListener(this, acceleration_sensor, SensorManager.SENSOR_DELAY_NORMAL);
+        manager.registerListener(this, gravity_sensor, SensorManager.SENSOR_DELAY_NORMAL);
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -73,7 +84,42 @@ public class PushUpsActivity extends AppCompatActivity  implements SensorEventLi
 
     @Override
     public void run() {
-        infoView.setText(getString(R.string.info_format, az, isGoingDown, isGoingUp, isDown, count));
+        long msNow = System.currentTimeMillis();
+
+        //加速度aの大きさ
+        float acceleration_magnitude = (float)Math.sqrt(Math.pow(ax, 2) + Math.pow(ay, 2) + Math.pow(az, 2));
+        //加速度aベクトルと重力gベクトルのなす角の余弦
+        float cos = (ax*gx + ay*gy + az*gz) /
+                (float)Math.sqrt( (Math.pow(ax, 2) + Math.pow(ay, 2) + Math.pow(az, 2)) * (Math.pow(gx, 2) + Math.pow(gy, 2) + Math.pow(gz, 2)) );
+        //加速度aの重力方向における大きさ
+        float acceleration_in_gravity_direction = acceleration_magnitude * cos;
+
+        if (acceleration_in_gravity_direction > ACCELERATION_THRESHOLD) {
+            if (!isGoingDown) {
+                msStartDown = System.currentTimeMillis();
+                isGoingDown = true;
+                isGoingUp = false;
+            }
+            if (msNow - msStartDown > TIME_THRESHOLD) {
+                isDown = true;
+            }
+        }
+
+        if (acceleration_in_gravity_direction < -ACCELERATION_THRESHOLD) {
+            if (!isGoingUp) {
+                msStartUp = System.currentTimeMillis();
+                isGoingDown = false;
+                isGoingUp = true;
+            }
+            if (isDown && msNow - msStartUp > TIME_THRESHOLD) {
+                count++;
+                isDown = false;
+            }
+        }
+
+        accelerationView.setText(getString(R.string.acceleration_format, acceleration_in_gravity_direction));
+        infoView.setText(getString(R.string.info_format, isGoingDown, isGoingUp, isDown, count));
+        gravityView.setText(getString(R.string.gravity_format, gx, gy, gz));
     }
 
     @Override
@@ -85,40 +131,19 @@ public class PushUpsActivity extends AppCompatActivity  implements SensorEventLi
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        ax = alpha * ax + (1 - alpha) * event.values[0];
-        ay = alpha * ay + (1 - alpha) * event.values[1];
-        az = alpha * az + (1 - alpha) * event.values[2];
-        Log.i(TAG, "x=" + ax + ", y=" + ay + ", z=" + az);
-
-//        isUp = false;
-//        isDown = false;
-
-        long msNow = System.currentTimeMillis();
-
-        if(az < -ACCELERATION_THRESHOLD){
-            if(!isGoingDown) {
-                msStartDown = System.currentTimeMillis();
-                isGoingDown = true;
-                isGoingUp = false;
-            }
-            if(msNow - msStartDown > TIME_THRESHOLD) {
-                isDown = true;
-            }
+        Sensor sensor= event.sensor;
+        if(sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
+            ax = alpha * ax + (1 - alpha) * event.values[0];
+            ay = alpha * ay + (1 - alpha) * event.values[1];
+            az = alpha * az + (1 - alpha) * event.values[2];
+            Log.i(TAG, "ax=" + ax + ", ay=" + ay + ", az=" + az);
         }
-
-        if(az > ACCELERATION_THRESHOLD){
-            if(!isGoingUp) {
-                msStartUp = System.currentTimeMillis();
-                isGoingDown = false;
-                isGoingUp = true;
-            }
-            if(isDown && msNow - msStartUp > TIME_THRESHOLD) {
-                count++;
-                isDown = false;
-            }
+        if(sensor.getType() == Sensor.TYPE_GRAVITY){
+            gx = event.values[0];
+            gy = event.values[1];
+            gz = event.values[2];
+            Log.i(TAG, "gx=" + ax + ", gy=" + ay + ", gz=" + az);
         }
-
-
     }
 
     @Override
