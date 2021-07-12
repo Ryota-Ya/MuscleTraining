@@ -29,6 +29,8 @@ public class PushUpsActivity extends AppCompatActivity  implements SensorEventLi
     private Sensor acceleration_sensor;
     private Sensor gravity_sensor;
 
+    private SoundPlayer soundPlayer;
+
     private final Handler handler = new Handler();
     private final Timer timer = new Timer();
 
@@ -66,6 +68,8 @@ public class PushUpsActivity extends AppCompatActivity  implements SensorEventLi
         if (gravity_sensor == null) {
             Toast.makeText(this, R.string.toast_no_gravity_sensor, Toast.LENGTH_LONG).show();
         }
+
+        soundPlayer = new SoundPlayer(this);
     }
 
     @Override
@@ -113,6 +117,10 @@ public class PushUpsActivity extends AppCompatActivity  implements SensorEventLi
             }
             if (isDown && msNow - msStartUp > TIME_THRESHOLD) {
                 count++;
+                if(count % 10 == 0)
+                    soundPlayer.playCount10();
+                else
+                    soundPlayer.playCount();
                 isDown = false;
             }
         }
