@@ -17,7 +17,7 @@ import java.util.TimerTask;
 
 public class PushUpsActivity extends AppCompatActivity  implements SensorEventListener, Runnable {
     private final static String TAG = PushUpsActivity.class.getSimpleName();
-    private final static long GRAPH_REFRESH_PERIOD_MS = 20;
+    private final static long COUNTING_JUDGEMENT_PERIOD_MS = 50;
     private final static long TIME_THRESHOLD = 200;
     private final static float ACCELERATION_THRESHOLD = 0.5f;
 
@@ -83,7 +83,7 @@ public class PushUpsActivity extends AppCompatActivity  implements SensorEventLi
             public void run() {
                 handler.post(PushUpsActivity.this);
             }
-        }, 0, GRAPH_REFRESH_PERIOD_MS);
+        }, 0, COUNTING_JUDGEMENT_PERIOD_MS);
     }
 
     @Override
