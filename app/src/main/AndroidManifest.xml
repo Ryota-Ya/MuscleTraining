@@ -3,6 +3,7 @@
     package="jp.ac.titech.itpro.sdl.muscletraining">
 
     <uses-sdk android:minSdkVersion="21" />
+    <uses-feature android:name="android.hardware.sensor.accelerometer" />
 
     <application
         android:allowBackup="true"
@@ -11,8 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MuscleTraining">
-        <activity android:name=".PushUpsActivity"></activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".PushUpsActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".MainActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
