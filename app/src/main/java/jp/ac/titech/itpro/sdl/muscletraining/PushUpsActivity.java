@@ -2,6 +2,7 @@ package jp.ac.titech.itpro.sdl.muscletraining;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -9,6 +10,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +55,13 @@ public class PushUpsActivity extends AppCompatActivity  implements SensorEventLi
         accelerationView = findViewById(R.id.acceleration_view);
         infoView = findViewById(R.id.info_view);
         gravityView = findViewById(R.id.gravity_view);
+
+        Button finish_button = findViewById(R.id.finish_button);
+        finish_button.setOnClickListener(v -> {
+            Log.d(TAG, "onClick - Push Ups");
+            Intent intent = new Intent(PushUpsActivity.this, MainActivity.class);
+            startActivity(intent);
+        });
 
         manager = (SensorManager) getSystemService(SENSOR_SERVICE);
         if (manager == null) {
