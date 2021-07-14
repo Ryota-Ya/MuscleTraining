@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -18,15 +19,28 @@ public class MainActivity extends AppCompatActivity {
     private final static String TAG = MainActivity.class.getSimpleName();
 
     private TextView savedCountView;
+    private CalendarView calendarView;
 
     private final String fileName = "count.txt";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setMainView();
+    }
+
+    protected void setMainView(){
         setContentView(R.layout.activity_main);
 
         savedCountView = findViewById(R.id.saved_count_view);
+
+        String str = readFile(fileName);
+        if (str != null) {
+            savedCountView.setText(str);
+        } else {
+            savedCountView.setText(R.string.read_error);
+        }
 
         Button push_ups_button = findViewById(R.id.push_ups_button);
         push_ups_button.setOnClickListener(v -> {
@@ -35,12 +49,23 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        String str = readFile(fileName);
-        if (str != null) {
-            savedCountView.setText(str);
-        } else {
-            savedCountView.setText(R.string.read_error);
-        }
+        Button record_button = findViewById(R.id.record_button);
+        record_button.setOnClickListener(v -> {
+            Log.d(TAG, "onClick - Record");
+            setRecordView();
+        });
+    }
+
+    protected void setRecordView(){
+        setContentView(R.layout.activity_main_record);
+
+        calendarView = findViewById(R.id.calendar_view);
+
+        Button close_button = findViewById(R.id.close_button);
+        close_button.setOnClickListener(v -> {
+            Log.d(TAG, "onClick - close");
+            setMainView();
+        });
     }
 
     public String readFile(String file) {

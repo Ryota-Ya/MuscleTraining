@@ -2,6 +2,8 @@
     <string name="app_name">MuscleTraining</string>
 
     <string name="push_ups_button">腹筋</string>
+    <string name="record_button">Record</string>
+    <string name="close_button">Close</string>
     <string name="read_error">Read file error</string>
 
     <string name="acceleration_format">a_in_g_direction: %5.3f</string>
