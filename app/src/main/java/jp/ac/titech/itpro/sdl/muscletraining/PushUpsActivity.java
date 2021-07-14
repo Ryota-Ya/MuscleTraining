@@ -2,6 +2,7 @@ package jp.ac.titech.itpro.sdl.muscletraining;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -14,6 +15,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -26,6 +29,8 @@ public class PushUpsActivity extends AppCompatActivity  implements SensorEventLi
     private TextView accelerationView;
     private TextView infoView;
     private TextView gravityView;
+
+    private final String fileName = "count.txt";
 
     private SensorManager manager;
     private Sensor acceleration_sensor;
@@ -58,7 +63,8 @@ public class PushUpsActivity extends AppCompatActivity  implements SensorEventLi
 
         Button finish_button = findViewById(R.id.finish_button);
         finish_button.setOnClickListener(v -> {
-            Log.d(TAG, "onClick - Push Ups");
+            Log.d(TAG, "onClick - finish");
+            saveFile(fileName, String.valueOf(count));
             Intent intent = new Intent(PushUpsActivity.this, MainActivity.class);
             startActivity(intent);
         });
@@ -166,5 +172,14 @@ public class PushUpsActivity extends AppCompatActivity  implements SensorEventLi
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         Log.d(TAG, "onAccuracyChanged: accuracy=" + accuracy);
+    }
+
+    public void saveFile(String file, String str) {
+        try (FileOutputStream fileOutputstream = openFileOutput(file, Context.MODE_PRIVATE)){
+            fileOutputstream.write(str.getBytes());
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
