@@ -17,10 +17,10 @@ import java.nio.charset.StandardCharsets;
 
 public class MainActivity extends AppCompatActivity {
     private final static String TAG = MainActivity.class.getSimpleName();
-    private final static int DATE_INDEX = 0;
-    private final static int PUSH_UPS = 1;
-    private final static int ABS = 2;
-    private final static int Squat = 3;
+    public final static int DATE_INDEX = 0;
+    public final static int PUSH_UPS = 1;
+    public final static int ABS = 2;
+    public final static int Squat = 3;
 
     private TextView savedCountView;
     private CalendarView calendarView;
@@ -43,6 +43,23 @@ public class MainActivity extends AppCompatActivity {
         push_ups_button.setOnClickListener(v -> {
             Log.d(TAG, "onClick - Push Ups");
             Intent intent = new Intent(MainActivity.this, TrainingActivity.class);
+            intent.putExtra("training_id", PUSH_UPS);
+            startActivity(intent);
+        });
+
+        Button abs_button = findViewById(R.id.abs_button);
+        abs_button.setOnClickListener(v -> {
+            Log.d(TAG, "onClick - Abs");
+            Intent intent = new Intent(MainActivity.this, TrainingActivity.class);
+            intent.putExtra("training_id", ABS);
+            startActivity(intent);
+        });
+
+        Button squat_button = findViewById(R.id.squat_button);
+        squat_button.setOnClickListener(v -> {
+            Log.d(TAG, "onClick - Squat");
+            Intent intent = new Intent(MainActivity.this, TrainingActivity.class);
+            intent.putExtra("training_id", Squat);
             startActivity(intent);
         });
 

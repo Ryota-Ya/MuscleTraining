@@ -2,6 +2,8 @@
     <string name="app_name">MuscleTraining</string>
 
     <string name="push_ups_button">腕立て伏せ</string>
+    <string name="abs_button">腹筋</string>
+    <string name="squat_button">スクワット</string>
     <string name="record_button">Record</string>
     <string name="close_button">Close</string>
     <string name="no_data">No data on %s</string>

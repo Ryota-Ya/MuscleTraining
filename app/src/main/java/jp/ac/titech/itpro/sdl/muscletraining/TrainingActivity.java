@@ -48,6 +48,8 @@ public class TrainingActivity extends AppCompatActivity  implements SensorEventL
     private final Handler handler = new Handler();
     private final Timer timer = new Timer();
 
+    private int training_id;
+
     private final static float alpha = 0.75f;
     private float ax, ay, az;
     private float gx, gy, gz;
@@ -63,6 +65,9 @@ public class TrainingActivity extends AppCompatActivity  implements SensorEventL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_push_ups);
         Log.d(TAG, "onCreate");
+
+        Intent acceptedIntent = getIntent();
+        training_id = acceptedIntent.getIntExtra("training_id", MainActivity.PUSH_UPS);
 
         accelerationView = findViewById(R.id.acceleration_view);
         infoView = findViewById(R.id.info_view);
@@ -195,15 +200,18 @@ public class TrainingActivity extends AppCompatActivity  implements SensorEventL
             while( (lineBuffer = reader.readLine()) != null ) {
                 line = lineBuffer ;
                 String[] split = line.split(",", 0);
-                if(split[0].equals(date)) {
-                    int totalCount = Integer.parseInt(split[1]) + count;
-                    line = date + "," + totalCount;
+                if(split[MainActivity.DATE_INDEX].equals(date)) {
+                    split[training_id] = String.valueOf(Integer.parseInt(split[training_id]) + count);
+                    line = split[MainActivity.DATE_INDEX] + "," + split[MainActivity.PUSH_UPS] + "," + split[MainActivity.ABS] + "," + split[MainActivity.Squat];
                     existsDate = true;
                 }
                 lineList.add(line);
             }
-            if(!existsDate)
-                lineList.add(date + "," + count);
+            if(!existsDate) {
+                String[] tmp = {date, "0", "0", "0"};
+                tmp[training_id] = String.valueOf(count);
+                lineList.add(tmp[MainActivity.DATE_INDEX] + "," + tmp[MainActivity.PUSH_UPS] + "," + tmp[MainActivity.ABS] + "," + tmp[MainActivity.Squat]);
+            }
         }
         catch (IOException e) {
             e.printStackTrace();
