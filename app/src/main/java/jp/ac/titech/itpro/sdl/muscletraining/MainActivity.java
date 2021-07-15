@@ -20,9 +20,12 @@ public class MainActivity extends AppCompatActivity {
     public final static int DATE_INDEX = 0;
     public final static int PUSH_UPS = 1;
     public final static int ABS = 2;
-    public final static int Squat = 3;
+    public final static int SQUAT = 3;
 
-    private TextView savedCountView;
+    private TextView dateView;
+    private TextView pushUpsCountView;
+    private TextView absCountView;
+    private TextView squatCountView;
     private CalendarView calendarView;
 
     private final String fileName = "count.txt";
@@ -59,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         squat_button.setOnClickListener(v -> {
             Log.d(TAG, "onClick - Squat");
             Intent intent = new Intent(MainActivity.this, TrainingActivity.class);
-            intent.putExtra("training_id", Squat);
+            intent.putExtra("training_id", SQUAT);
             startActivity(intent);
         });
 
@@ -73,16 +76,26 @@ public class MainActivity extends AppCompatActivity {
     protected void setRecordView(){
         setContentView(R.layout.activity_main_record);
 
-        savedCountView = findViewById(R.id.saved_count_view);
+        dateView = findViewById(R.id.date_view);
+        pushUpsCountView = findViewById(R.id.push_ups_count_view);
+        absCountView = findViewById(R.id.abs_count_view);
+        squatCountView = findViewById(R.id.squat_count_view);
 
         calendarView = findViewById(R.id.calendar_view);
         calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
             String date = year + "-" + month + "-" + dayOfMonth;
             String str = readLineFromFile(fileName, date);
             if (str != null) {
-                savedCountView.setText(str);
+                String[] split = str.split(",", 0);
+                dateView.setText(split[DATE_INDEX]);
+                pushUpsCountView.setText(getString(R.string.push_ups_count_format, split[PUSH_UPS]));
+                absCountView.setText(getString(R.string.abs_count_format, split[ABS]));
+                squatCountView.setText(getString(R.string.squat_count_format, split[SQUAT]));
             } else {
-                savedCountView.setText(getString(R.string.no_data, date));
+                dateView.setText(getString(R.string.no_data, date));
+                pushUpsCountView.setText("");
+                absCountView.setText("");
+                squatCountView.setText("");
             }
         });
 

@@ -128,7 +128,7 @@ public class TrainingActivity extends AppCompatActivity  implements SensorEventL
         //加速度aの重力方向における大きさ
         float acceleration_in_gravity_direction = acceleration_magnitude * cos;
 
-        if (acceleration_in_gravity_direction > ACCELERATION_THRESHOLD) {
+        if (acceleration_in_gravity_direction < -ACCELERATION_THRESHOLD) {
             if (!isGoingDown) {
                 msStartDown = System.currentTimeMillis();
                 isGoingDown = true;
@@ -139,7 +139,7 @@ public class TrainingActivity extends AppCompatActivity  implements SensorEventL
             }
         }
 
-        if (acceleration_in_gravity_direction < -ACCELERATION_THRESHOLD) {
+        if (acceleration_in_gravity_direction > ACCELERATION_THRESHOLD) {
             if (!isGoingUp) {
                 msStartUp = System.currentTimeMillis();
                 isGoingDown = false;
@@ -202,7 +202,7 @@ public class TrainingActivity extends AppCompatActivity  implements SensorEventL
                 String[] split = line.split(",", 0);
                 if(split[MainActivity.DATE_INDEX].equals(date)) {
                     split[training_id] = String.valueOf(Integer.parseInt(split[training_id]) + count);
-                    line = split[MainActivity.DATE_INDEX] + "," + split[MainActivity.PUSH_UPS] + "," + split[MainActivity.ABS] + "," + split[MainActivity.Squat];
+                    line = split[MainActivity.DATE_INDEX] + "," + split[MainActivity.PUSH_UPS] + "," + split[MainActivity.ABS] + "," + split[MainActivity.SQUAT];
                     existsDate = true;
                 }
                 lineList.add(line);
@@ -210,7 +210,7 @@ public class TrainingActivity extends AppCompatActivity  implements SensorEventL
             if(!existsDate) {
                 String[] tmp = {date, "0", "0", "0"};
                 tmp[training_id] = String.valueOf(count);
-                lineList.add(tmp[MainActivity.DATE_INDEX] + "," + tmp[MainActivity.PUSH_UPS] + "," + tmp[MainActivity.ABS] + "," + tmp[MainActivity.Squat]);
+                lineList.add(tmp[MainActivity.DATE_INDEX] + "," + tmp[MainActivity.PUSH_UPS] + "," + tmp[MainActivity.ABS] + "," + tmp[MainActivity.SQUAT]);
             }
         }
         catch (IOException e) {

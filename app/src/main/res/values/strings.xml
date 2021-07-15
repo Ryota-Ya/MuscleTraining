@@ -7,7 +7,9 @@
     <string name="record_button">Record</string>
     <string name="close_button">Close</string>
     <string name="no_data">No data on %s</string>
-    <string name="saved_count_format"></string>
+    <string name="push_ups_count_format">腕立て伏せ: %s回</string>
+    <string name="abs_count_format">腹筋: %s回</string>
+    <string name="squat_count_format">スクワット: %s回</string>
 
     <string name="acceleration_format">a_in_g_direction: %5.3f</string>
     <string name="info_format">isGoingDown: %b, isGoingUp: %b, isDown: %b, count: %d</string>
