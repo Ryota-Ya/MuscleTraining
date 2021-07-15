@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private final static String TAG = MainActivity.class.getSimpleName();
 
     private TextView savedCountView;
+    private TextView dateView;
     private CalendarView calendarView;
 
     private final String fileName = "count.txt";
@@ -59,7 +60,11 @@ public class MainActivity extends AppCompatActivity {
     protected void setRecordView(){
         setContentView(R.layout.activity_main_record);
 
+        dateView = findViewById(R.id.date_view);
         calendarView = findViewById(R.id.calendar_view);
+        calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
+            dateView.setText(getString(R.string.date_format, year, month, dayOfMonth));
+        });
 
         Button close_button = findViewById(R.id.close_button);
         close_button.setOnClickListener(v -> {
