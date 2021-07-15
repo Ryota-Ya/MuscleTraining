@@ -17,6 +17,10 @@ import java.nio.charset.StandardCharsets;
 
 public class MainActivity extends AppCompatActivity {
     private final static String TAG = MainActivity.class.getSimpleName();
+    private final static int DATE_INDEX = 0;
+    private final static int PUSH_UPS = 1;
+    private final static int ABS = 2;
+    private final static int Squat = 3;
 
     private TextView savedCountView;
     private CalendarView calendarView;
@@ -38,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         Button push_ups_button = findViewById(R.id.push_ups_button);
         push_ups_button.setOnClickListener(v -> {
             Log.d(TAG, "onClick - Push Ups");
-            Intent intent = new Intent(MainActivity.this, PushUpsActivity.class);
+            Intent intent = new Intent(MainActivity.this, TrainingActivity.class);
             startActivity(intent);
         });
 
@@ -81,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
             String lineBuffer;
             while( (lineBuffer = reader.readLine()) != null ) {
                 line = lineBuffer ;
-                if(line.split(",", 0)[0].equals(date))
+                if(line.split(",", 0)[DATE_INDEX].equals(date))
                     targetLine = line;
             }
         }

@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class PushUpsActivity extends AppCompatActivity  implements SensorEventListener, Runnable {
-    private final static String TAG = PushUpsActivity.class.getSimpleName();
+public class TrainingActivity extends AppCompatActivity  implements SensorEventListener, Runnable {
+    private final static String TAG = TrainingActivity.class.getSimpleName();
     private final static long COUNTING_JUDGEMENT_PERIOD_MS = 50;
     private final static long TIME_THRESHOLD = 200;
     private final static float ACCELERATION_THRESHOLD = 0.5f;
@@ -75,7 +75,7 @@ public class PushUpsActivity extends AppCompatActivity  implements SensorEventLi
             String date = (cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DAY_OF_MONTH));
             //String savedStr = date + "," + count;
             saveFile(fileName, date, count);
-            Intent intent = new Intent(PushUpsActivity.this, MainActivity.class);
+            Intent intent = new Intent(TrainingActivity.this, MainActivity.class);
             startActivity(intent);
         });
 
@@ -106,7 +106,7 @@ public class PushUpsActivity extends AppCompatActivity  implements SensorEventLi
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                handler.post(PushUpsActivity.this);
+                handler.post(TrainingActivity.this);
             }
         }, 0, COUNTING_JUDGEMENT_PERIOD_MS);
     }
