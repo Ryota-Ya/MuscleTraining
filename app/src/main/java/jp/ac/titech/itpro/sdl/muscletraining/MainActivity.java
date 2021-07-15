@@ -19,7 +19,6 @@ public class MainActivity extends AppCompatActivity {
     private final static String TAG = MainActivity.class.getSimpleName();
 
     private TextView savedCountView;
-    private TextView dateView;
     private CalendarView calendarView;
 
     private final String fileName = "count.txt";
@@ -33,15 +32,6 @@ public class MainActivity extends AppCompatActivity {
 
     protected void setMainView(){
         setContentView(R.layout.activity_main);
-
-        savedCountView = findViewById(R.id.saved_count_view);
-
-        String str = readFile(fileName);
-        if (str != null) {
-            savedCountView.setText(str);
-        } else {
-            savedCountView.setText(R.string.read_error);
-        }
 
         Button push_ups_button = findViewById(R.id.push_ups_button);
         push_ups_button.setOnClickListener(v -> {
@@ -60,10 +50,17 @@ public class MainActivity extends AppCompatActivity {
     protected void setRecordView(){
         setContentView(R.layout.activity_main_record);
 
-        dateView = findViewById(R.id.date_view);
+        savedCountView = findViewById(R.id.saved_count_view);
+
         calendarView = findViewById(R.id.calendar_view);
         calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
-            dateView.setText(getString(R.string.date_format, year, month, dayOfMonth));
+            String date = year + "-" + month + "-" + dayOfMonth;
+            String str = readLineFromFile(fileName, date);
+            if (str != null) {
+                savedCountView.setText(str);
+            } else {
+                savedCountView.setText(getString(R.string.no_data, date));
+            }
         });
 
         Button close_button = findViewById(R.id.close_button);
@@ -73,19 +70,22 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public String readFile(String file) {
-        String text = null;
+    public String readLineFromFile(String file, String date) {
+        String line = null;
+        String targetLine = null;
 
         try (FileInputStream fileInputStream = openFileInput(file);
              BufferedReader reader= new BufferedReader(new InputStreamReader(fileInputStream, StandardCharsets.UTF_8))) {
             String lineBuffer;
             while( (lineBuffer = reader.readLine()) != null ) {
-                text = lineBuffer ;
+                line = lineBuffer ;
+                if(line.split(",", 0)[0].equals(date))
+                    targetLine = line;
             }
         }
         catch (IOException e) {
             e.printStackTrace();
         }
-        return text;
+        return targetLine;
     }
 }

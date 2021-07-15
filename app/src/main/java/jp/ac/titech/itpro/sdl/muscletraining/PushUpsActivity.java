@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -64,7 +65,10 @@ public class PushUpsActivity extends AppCompatActivity  implements SensorEventLi
         Button finish_button = findViewById(R.id.finish_button);
         finish_button.setOnClickListener(v -> {
             Log.d(TAG, "onClick - finish");
-            saveFile(fileName, String.valueOf(count));
+            Calendar cal = Calendar.getInstance();
+            String date = (cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DAY_OF_MONTH));
+            String savedStr = date + "," + count;
+            saveFile(fileName, savedStr);
             Intent intent = new Intent(PushUpsActivity.this, MainActivity.class);
             startActivity(intent);
         });
