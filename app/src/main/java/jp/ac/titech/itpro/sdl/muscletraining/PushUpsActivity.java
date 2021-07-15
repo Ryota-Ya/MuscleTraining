@@ -15,9 +15,15 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -67,8 +73,8 @@ public class PushUpsActivity extends AppCompatActivity  implements SensorEventLi
             Log.d(TAG, "onClick - finish");
             Calendar cal = Calendar.getInstance();
             String date = (cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DAY_OF_MONTH));
-            String savedStr = date + "," + count;
-            saveFile(fileName, savedStr);
+            //String savedStr = date + "," + count;
+            saveFile(fileName, date, count);
             Intent intent = new Intent(PushUpsActivity.this, MainActivity.class);
             startActivity(intent);
         });
@@ -178,9 +184,36 @@ public class PushUpsActivity extends AppCompatActivity  implements SensorEventLi
         Log.d(TAG, "onAccuracyChanged: accuracy=" + accuracy);
     }
 
-    public void saveFile(String file, String str) {
-        try (FileOutputStream fileOutputstream = openFileOutput(file, Context.MODE_PRIVATE)){
-            fileOutputstream.write(str.getBytes());
+    public void saveFile(String file, String date, int count) {
+        List<String> lineList = new ArrayList<>();
+        String line = null;
+        boolean existsDate = false;
+
+        try (FileInputStream fileInputStream = openFileInput(file);
+             BufferedReader reader= new BufferedReader(new InputStreamReader(fileInputStream, StandardCharsets.UTF_8))) {
+            String lineBuffer;
+            while( (lineBuffer = reader.readLine()) != null ) {
+                line = lineBuffer ;
+                String[] split = line.split(",", 0);
+                if(split[0].equals(date)) {
+                    int totalCount = Integer.parseInt(split[1]) + count;
+                    line = date + "," + totalCount;
+                    existsDate = true;
+                }
+                lineList.add(line);
+            }
+            if(!existsDate)
+                lineList.add(date + "," + count);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        deleteFile(file);
+
+        try (FileOutputStream fileOutputstream = openFileOutput(file, Context.MODE_PRIVATE|Context.MODE_APPEND)){
+            for(int i = 0; i < lineList.size(); ++i)
+                fileOutputstream.write(lineList.get(i).getBytes());
         }
         catch (IOException e) {
             e.printStackTrace();
