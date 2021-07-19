@@ -33,9 +33,11 @@ public class TrainingActivity extends AppCompatActivity  implements SensorEventL
     private final static long TIME_THRESHOLD = 200;
     private final static float ACCELERATION_THRESHOLD = 0.5f;
 
-    private TextView accelerationView;
-    private TextView infoView;
-    private TextView gravityView;
+//    private TextView accelerationView;
+//    private TextView infoView;
+//    private TextView gravityView;
+    private TextView trainingNameView;
+    private TextView countView;
 
     private final String fileName = "count.txt";
 
@@ -63,15 +65,17 @@ public class TrainingActivity extends AppCompatActivity  implements SensorEventL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_push_ups);
+        setContentView(R.layout.activity_training);
         Log.d(TAG, "onCreate");
 
         Intent acceptedIntent = getIntent();
         training_id = acceptedIntent.getIntExtra("training_id", MainActivity.PUSH_UPS);
 
-        accelerationView = findViewById(R.id.acceleration_view);
-        infoView = findViewById(R.id.info_view);
-        gravityView = findViewById(R.id.gravity_view);
+//        accelerationView = findViewById(R.id.acceleration_view);
+//        infoView = findViewById(R.id.info_view);
+//        gravityView = findViewById(R.id.gravity_view);
+        trainingNameView = findViewById(R.id.training_name_view);
+        countView = findViewById(R.id.count_view);
 
         Button finish_button = findViewById(R.id.finish_button);
         finish_button.setOnClickListener(v -> {
@@ -155,9 +159,22 @@ public class TrainingActivity extends AppCompatActivity  implements SensorEventL
             }
         }
 
-        accelerationView.setText(getString(R.string.acceleration_format, acceleration_in_gravity_direction));
-        infoView.setText(getString(R.string.info_format, isGoingDown, isGoingUp, isDown, count));
-        gravityView.setText(getString(R.string.gravity_format, gx, gy, gz));
+        switch(training_id){
+            case MainActivity.PUSH_UPS:
+                trainingNameView.setText(R.string.push_ups);
+                break;
+            case MainActivity.ABS:
+                trainingNameView.setText(R.string.abs);
+                break;
+            case MainActivity.SQUAT:
+                trainingNameView.setText(R.string.squat);
+                break;
+        }
+
+        countView.setText(String.valueOf(count));
+//        accelerationView.setText(getString(R.string.acceleration_format, acceleration_in_gravity_direction));
+//        infoView.setText(getString(R.string.info_format, isGoingDown, isGoingUp, isDown, count));
+//        gravityView.setText(getString(R.string.gravity_format, gx, gy, gz));
     }
 
     @Override
@@ -220,8 +237,9 @@ public class TrainingActivity extends AppCompatActivity  implements SensorEventL
         deleteFile(file);
 
         try (FileOutputStream fileOutputstream = openFileOutput(file, Context.MODE_PRIVATE|Context.MODE_APPEND)){
-            for(int i = 0; i < lineList.size(); ++i)
+            for(int i = 0; i < lineList.size(); ++i) {
                 fileOutputstream.write(lineList.get(i).getBytes());
+            }
         }
         catch (IOException e) {
             e.printStackTrace();
