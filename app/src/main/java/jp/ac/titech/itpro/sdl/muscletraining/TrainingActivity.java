@@ -239,6 +239,7 @@ public class TrainingActivity extends AppCompatActivity  implements SensorEventL
         try (FileOutputStream fileOutputstream = openFileOutput(file, Context.MODE_PRIVATE|Context.MODE_APPEND)){
             for(int i = 0; i < lineList.size(); ++i) {
                 fileOutputstream.write(lineList.get(i).getBytes());
+                fileOutputstream.write("\n".getBytes());
             }
         }
         catch (IOException e) {
