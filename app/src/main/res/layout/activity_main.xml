@@ -55,22 +55,6 @@
         app:layout_constraintVertical_bias="0.572" />
 
     <Button
-        android:id="@+id/delete_record_button"
-        android:layout_width="170dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin"
-        android:text="delete"
-        android:textSize="@dimen/text_size"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintLeft_toRightOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.724" />
-
-    <Button
         android:id="@+id/record_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

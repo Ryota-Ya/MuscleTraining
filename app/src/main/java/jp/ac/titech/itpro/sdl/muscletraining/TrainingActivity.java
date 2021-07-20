@@ -69,9 +69,6 @@ public class TrainingActivity extends AppCompatActivity  implements SensorEventL
         Intent acceptedIntent = getIntent();
         training_id = acceptedIntent.getIntExtra("training_id", MainActivity.PUSH_UPS);
 
-//        accelerationView = findViewById(R.id.acceleration_view);
-//        infoView = findViewById(R.id.info_view);
-//        gravityView = findViewById(R.id.gravity_view);
         trainingNameView = findViewById(R.id.training_name_view);
         countView = findViewById(R.id.count_view);
 
@@ -80,7 +77,6 @@ public class TrainingActivity extends AppCompatActivity  implements SensorEventL
             Log.d(TAG, "onClick - finish");
             Calendar cal = Calendar.getInstance();
             String date = (cal.get(Calendar.YEAR) + "-" + (cal.get(Calendar.MONTH) + 1) + "-" + cal.get(Calendar.DAY_OF_MONTH));
-            //String savedStr = date + "," + count;
             saveFile(MainActivity.fileName, date, count);
             Intent intent = new Intent(TrainingActivity.this, MainActivity.class);
             startActivity(intent);
@@ -170,9 +166,6 @@ public class TrainingActivity extends AppCompatActivity  implements SensorEventL
         }
 
         countView.setText(String.valueOf(count));
-//        accelerationView.setText(getString(R.string.acceleration_format, acceleration_in_gravity_direction));
-//        infoView.setText(getString(R.string.info_format, isGoingDown, isGoingUp, isDown, count));
-//        gravityView.setText(getString(R.string.gravity_format, gx, gy, gz));
     }
 
     @Override

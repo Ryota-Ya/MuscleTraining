@@ -78,12 +78,6 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "onClick - Record");
             setRecordView();
         });
-
-        Button delete_button = findViewById(R.id.delete_record_button);
-        delete_button.setOnClickListener(v -> {
-            Log.d(TAG, "onClick - Delete");
-            deleteFile(fileName);
-        });
     }
 
     protected void setRecordView(){
