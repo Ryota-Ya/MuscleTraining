@@ -79,7 +79,7 @@ public class TrainingActivity extends AppCompatActivity  implements SensorEventL
         finish_button.setOnClickListener(v -> {
             Log.d(TAG, "onClick - finish");
             Calendar cal = Calendar.getInstance();
-            String date = (cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DAY_OF_MONTH));
+            String date = (cal.get(Calendar.YEAR) + "-" + (cal.get(Calendar.MONTH) + 1) + "-" + cal.get(Calendar.DAY_OF_MONTH));
             //String savedStr = date + "," + count;
             saveFile(MainActivity.fileName, date, count);
             Intent intent = new Intent(TrainingActivity.this, MainActivity.class);

@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
         calendarView = findViewById(R.id.calendar_view);
         calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
-            String date = year + "-" + month + "-" + dayOfMonth;
+            String date = year + "-" + (month + 1) + "-" + dayOfMonth;
             String str = readLineFromFile(fileName, date);
             if (str != null) {
                 String[] split = str.split(",", 0);
